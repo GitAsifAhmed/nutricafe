@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menu - Nutri Café</title>
+  <meta name="description" content="The Nutri Café launch menu: breakfast and lunch plates with calories, protein, carbs, fat and fibre for every dish.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=15">
+</head>
+<body data-page="menu">
+  <header id="site-header"></header>
+  <main>
+    <section class="page-hero">
+      <div class="blob" style="width:460px;height:460px;background:#e9d7a8;right:-100px;top:60px"></div>
+      <div class="wrap">
+        <div class="crumbs" data-reveal><a href="index.html">Home</a><span>/</span><span>Menu</span></div>
+        <h1 data-split>The launch <em>menu.</em></h1>
+        <p class="lede" data-reveal style="--d:.3s">Healthier versions of the food you already love: two breakfasts and three lunches, cooked with measured oil and balanced portions. Tap any plate for its ingredients, method and full nutrition label.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px">
+      <div class="wrap">
+        <div class="section-head menu-tools" style="margin-bottom:32px;align-items:center">
+          <div class="filter-bar" data-reveal role="tablist" aria-label="Filter by meal">
+            <span class="pill"></span>
+            <button class="on" data-f="all" role="tab">All plates</button>
+            <button data-f="Breakfast" role="tab">Breakfast</button>
+            <button data-f="Lunch" role="tab">Lunch</button>
+          </div>
+          <label class="field" data-reveal style="grid-template-columns:auto 200px;align-items:center;gap:12px">
+            <span style="font-size:13px;color:var(--ink-3)">Sort by</span>
+            <select id="sort" class="input" style="padding:10px 14px">
+              <option value="default">Menu order</option>
+              <option value="price">Price: low to high</option>
+              <option value="kcal">Calories: low to high</option>
+              <option value="protein">Protein: high to low</option>
+            </select>
+          </label>
+        </div>
+        <div class="menu-grid" id="menu-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head">
+          <div><span class="eyebrow" data-reveal>Side by side</span><h2 data-split>Compare every<br><em>plate at once.</em></h2></div>
+          <p class="lede" data-reveal>Per box, as served. Values are calculated from the weighed recipe, so they change only when the recipe changes.</p>
+        </div>
+        <div class="panel" data-reveal style="overflow-x:auto">
+          <table class="ing-table" id="compare">
+            <thead><tr><th>Dish</th><th>Plate</th><th class="r">Price</th><th class="r">Energy</th><th class="r">Protein</th><th class="r">Carbs</th><th class="r">Fat</th><th class="r">Fibre</th><th class="r">Protein per ৳10</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="note" style="margin-top:16px">Want to check a number? Open any dish in the <a href="calculator.html">nutrition calculator</a> and every ingredient loads with its exact weight.</p>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="assets/js/site.js?v=15"></script>
+  <script src="assets/js/data.js?v=15"></script>
+  <script src="assets/js/render.js?v=15"></script>
+  <script>
+  (function () {
+    const { $, $$ } = NCUI, { MENU } = NC, { dishCard, plateClass, r0, r1 } = NCRender;
+    const grid = $("#menu-grid");
+    let current = "all";
+    function draw(list) {
+      grid.innerHTML = list.map(dishCard).join("");
+      $$(".dish", grid).forEach((d, i) => { d.style.setProperty("--d", (i % 3) * 0.07 + "s"); d.classList.toggle("hidden", current !== "all" && d.dataset.meal !== current); });
+      NCUI.observe(grid);
+    }
+    function sorted() {
+      const v = $("#sort").value, l = MENU.slice();
+      if (v === "price") l.sort((a, b) => a.price - b.price);
+      if (v === "kcal") l.sort((a, b) => a.nutrition.kcal - b.nutrition.kcal);
+      if (v === "protein") l.sort((a, b) => b.nutrition.p - a.nutrition.p);
+      return l;
+    }
+    draw(MENU);
+    $("#sort").addEventListener("change", () => { grid.style.opacity = 0; setTimeout(() => { draw(sorted()); grid.style.opacity = 1; }, 250); });
+    grid.style.transition = "opacity .25s";
+
+    const bar = $(".filter-bar"), pill = $(".pill", bar);
+    const movePill = (b) => { pill.style.left = b.offsetLeft + "px"; pill.style.width = b.offsetWidth + "px"; };
+    function setFilter(f) {
+      current = f;
+      $$("button", bar).forEach((x) => x.classList.toggle("on", x.dataset.f === f));
+      movePill($("button.on", bar));
+      $$(".dish", grid).forEach((d) => {
+        const show = f === "all" || d.dataset.meal === f;
+        if (show) { d.classList.remove("hidden"); requestAnimationFrame(() => d.classList.remove("fading")); }
+        else { d.classList.add("fading"); setTimeout(() => d.classList.contains("fading") && d.classList.add("hidden"), 380); }
+      });
+    }
+    $$("button", bar).forEach((b) => b.addEventListener("click", () => setFilter(b.dataset.f)));
+    const hash = location.hash.replace("#", "");
+    if (hash === "breakfast") setFilter("Breakfast"); else if (hash === "lunch") setFilter("Lunch");
+    requestAnimationFrame(() => movePill($("button.on", bar)));
+    addEventListener("load", () => movePill($("button.on", bar)));
+    addEventListener("resize", () => movePill($("button.on", bar)));
+
+    $("#compare tbody").innerHTML = MENU.map((m) => { const n = m.nutrition; return `<tr>
+      <td><a href="menu/${m.slug}.html" class="link-arrow" style="color:var(--ink)">${m.name}</a><span class="bn">${m.meal}</span></td>
+      <td><span class="chip ${plateClass(m.plate)}"><span class="dot"></span>${m.plate}</span></td>
+      <td class="r num">৳${m.price}</td><td class="r num">${r0(n.kcal)} kcal</td><td class="r num">${r1(n.p)} g</td>
+      <td class="r num">${r1(n.c)} g</td><td class="r num">${r1(n.f)} g</td><td class="r num">${r1(n.fib)} g</td>
+      <td class="r num">${r1(n.p / m.price * 10)} g</td></tr>`; }).join("");
+  })();
+  </script>
+</body>
+</html>

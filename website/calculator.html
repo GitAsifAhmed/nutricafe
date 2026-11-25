@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nutrition calculator - Nutri Café</title>
+  <meta name="description" content="Estimate calories, protein, carbohydrate, fat and fibre for any dish you cook - including oil, spices, cooking method and portion size. Built on USDA and Bangladesh food composition data.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=15">
+</head>
+<body data-page="calculator">
+  <header id="site-header"></header>
+  <main>
+    <section class="page-hero" style="padding-bottom:56px">
+      <div class="blob" style="width:440px;height:440px;background:#cfe0cc;right:-80px;top:80px"></div>
+      <div class="wrap">
+        <div class="crumbs" data-reveal><a href="index.html">Home</a><span>/</span><span>Nutrition calculator</span></div>
+        <h1 data-split>Weigh it.<br><em>Read it.</em></h1>
+        <p class="lede" data-reveal style="--d:.3s">Add what goes into a dish - every spoon of oil, every handful of dal - choose how it was cooked, and get calories, protein, carbs, fat and fibre per serving, with a label you can copy.</p>
+        <div class="calc-hero-stats" data-reveal style="--d:.4s">
+          <div><b id="ing-count">80+</b>ingredients, with Bangla names</div>
+          <div><b>5</b>cooking methods</div>
+          <div><b>Bangladesh</b>food table first</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap calc-shell">
+        <div>
+          <!-- 1. the dish -->
+          <div class="calc-card" data-reveal>
+            <div class="calc-sec">
+              <div class="calc-sec-title"><h4><span class="n">1</span>Your dish</h4><button class="link-arrow" id="clear" type="button" style="border:0;background-color:transparent;cursor:pointer;font-size:14px">Start blank</button></div>
+              <input class="dish-name" id="rname" placeholder="Name your dish…" aria-label="Dish name" maxlength="60">
+              <div class="head-row">
+                <div><label for="servings">Servings this makes</label>
+                  <div class="stepper"><button type="button" data-sv="-1" aria-label="Fewer servings">−</button><input id="servings" type="number" min="1" max="50" value="1"><button type="button" data-sv="1" aria-label="More servings">+</button></div></div>
+                <p class="note" style="margin:0;max-width:40ch">Enter the whole pot, then how many plates it serves. Results are shown per serving.</p>
+              </div>
+            </div>
+            <div class="calc-sec">
+              <div class="calc-sec-title"><h4>Start from an example</h4></div>
+              <div class="starts" id="starts"></div>
+            </div>
+          </div>
+
+          <!-- 2. ingredients -->
+          <div class="calc-card" data-reveal>
+            <div class="calc-sec">
+              <div class="calc-sec-title"><h4><span class="n">2</span>Ingredients</h4><span class="note" id="ing-total" style="margin:0"></span></div>
+              <div class="search">
+                <label class="search-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                  <input id="q" placeholder="Search ingredients - e.g. dal, ilish, ভাত, oil" autocomplete="off" aria-label="Search ingredients" aria-controls="results">
+                  <kbd>/</kbd></label>
+                <div class="results" id="results" role="listbox" data-lenis-prevent></div>
+              </div>
+              <div class="quick" id="quick"></div>
+              <div class="ing-cols"><span></span><span>Ingredient</span><span class="r">Amount</span><span>Unit</span><span class="r">kcal</span><span></span></div>
+              <div class="ing-list" id="rows"></div>
+              <div class="warn" id="warn"></div>
+            </div>
+          </div>
+
+          <!-- 3. method -->
+          <div class="calc-card" data-reveal>
+            <div class="calc-sec">
+              <div class="calc-sec-title"><h4><span class="n">3</span>How was it cooked?</h4></div>
+              <div class="methods" id="methods"></div>
+              <div class="retention">
+                <label for="keep">Oil &amp; fat that ends up in the food</label><b id="keep-val">100%</b>
+                <input type="range" id="keep" min="5" max="100" step="1" value="100">
+                <p id="keep-hint">Curries keep almost all of their oil.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- results -->
+        <aside class="sticky">
+          <div class="result-card" data-reveal="scale">
+            <div class="r-tabs" role="tablist"><span class="pill"></span>
+              <button class="on" data-tab="sum" role="tab">Overview</button><button data-tab="label" role="tab">Label</button><button data-tab="table" role="tab">Details</button></div>
+
+            <div class="r-pane on" data-pane="sum">
+              <span class="eyebrow">Per serving</span>
+              <div class="kcal-big"><b id="r-kcal">0</b><span>kcal</span></div>
+              <div class="r-per" id="r-per"></div>
+              <div class="donut-wrap"><div class="donut" id="r-donut"></div><div class="macro-list" id="r-macros"></div></div>
+              <div class="drivers"><h5>Where the calories come from</h5><div id="r-drivers"></div></div>
+              <div class="balance" id="r-balance"></div>
+            </div>
+
+            <div class="r-pane" data-pane="label"><div id="r-label"></div></div>
+
+            <div class="r-pane" data-pane="table">
+              <span class="eyebrow">Per serving and whole dish</span>
+              <table class="res-table" style="margin-top:16px"><thead><tr><th></th><th class="r">Serving</th><th class="r">Dish</th><th class="r">% DV*</th></tr></thead><tbody id="r-table"></tbody></table>
+              <p class="note" style="color:#a3bcaa;margin-top:16px">*Share of a 2,000 kcal adult day: protein 50 g, carbohydrate 275 g, fat 78 g, saturated fat 20 g, fibre 28 g; sodium 2,000 mg and free sugars 50 g are WHO upper limits. Carbohydrate is available carbohydrate, as in the Food Composition Table for Bangladesh.</p>
+            </div>
+
+            <div style="padding:0 30px 30px"><div class="result-actions">
+              <button class="btn light" id="copy" type="button">Copy summary</button>
+              <div class="share" data-share data-style="on-dark" data-label="Share" data-title="Nutri Café nutrition calculator"></div>
+            </div></div>
+          </div>
+          <p class="note" style="margin-top:16px">Estimates for planning and learning, not medical or dietary advice.</p>
+        </aside>
+      </div>
+
+      <div class="wrap" id="body-check">
+        <div class="section-head" style="margin:96px 0 32px"><div><span class="eyebrow" data-reveal>Your body</span><h2 data-split style="font-size:clamp(32px,3.4vw,46px)">How this dish<br><em>affects your body</em></h2></div>
+          <p class="lede" data-reveal>Each system is checked against WHO guidance, using one serving of the dish above. It updates as you change ingredients, oil or cooking method.</p></div>
+        <div id="health"></div>
+        <p class="note" style="margin-top:20px">General information for healthy adults, based on WHO guidelines; not a diagnosis or medical advice. If you have a heart, kidney or liver condition, diabetes or are pregnant, follow your doctor's or dietitian's advice.</p>
+        <div class="refs" data-reveal style="margin-top:28px">
+          <div><h4>The guidance behind it</h4><p>Primary sources used for the health check.</p></div>
+          <div class="ref-links">
+            <a href="https://www.who.int/publications/i/item/9789240073630" target="_blank" rel="noopener">WHO: saturated &amp; trans fat (2023) <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.who.int/news-room/fact-sheets/detail/salt-reduction" target="_blank" rel="noopener">WHO: salt &amp; sodium <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.who.int/publications/i/item/9789241549028" target="_blank" rel="noopener">WHO: sugars intake <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.who.int/publications/i/item/9789240073593" target="_blank" rel="noopener">WHO: carbohydrate &amp; fibre (2023) <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener">WHO: healthy diet <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.fao.org/nutrition/education/food-dietary-guidelines/regions/countries/bangladesh/en/" target="_blank" rel="noopener">Dietary Guidelines for Bangladesh <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.who.int/news-room/fact-sheets/detail/household-air-pollution-and-health" target="_blank" rel="noopener">WHO: cooking smoke &amp; lungs <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <div class="section-head" style="margin:96px 0 0"><div><span class="eyebrow" data-reveal>Method</span><h2 data-split style="font-size:clamp(32px,3.4vw,46px)">How the numbers<br><em>are worked out</em></h2></div></div>
+        <div class="how-calc">
+          <div data-reveal><span class="n">01</span><b>Per-100 g values</b><p>82 of 93 ingredients use the Food Composition Table for Bangladesh (FAO/INFS, Dhaka University), measured on local foods. The rest use USDA FoodData Central. Every ingredient shows its source.</p></div>
+          <div data-reveal style="--d:.06s"><span class="n">02</span><b>Units to grams</b><p>Spoons, cups and pieces are converted to grams - a tablespoon of oil is 13.8 g, a farm egg about 50 g edible, a level teaspoon of salt about 6 g.</p></div>
+          <div data-reveal style="--d:.12s"><span class="n">03</span><b>Edible portion</b><p>Bone-in chicken and fish are entered at purchase weight; their values already account for the bone you don't eat.</p></div>
+          <div data-reveal style="--d:.18s"><span class="n">04</span><b>Oil retention</b><p>The cooking method sets how much oil stays in the food. Curries keep it all; deep-frying keeps only what is absorbed.</p></div>
+        </div>
+        <div class="refs" data-reveal>
+          <div><h4>Cross-check any result</h4><p>These trusted tools give comparable values. US tools count fibre inside "total carbohydrate", so their carb figure will be a little higher.</p></div>
+          <div class="ref-links">
+            <a href="https://fdc.nal.usda.gov/" target="_blank" rel="noopener">USDA FoodData Central <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.fao.org/fileadmin/templates/food_composition/documents/FCT_10_2_14_final_version.pdf" target="_blank" rel="noopener">Food Composition Table for Bangladesh (PDF) <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://cronometer.com/" target="_blank" rel="noopener">Cronometer <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.myfitnesspal.com/" target="_blank" rel="noopener">MyFitnessPal <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.nutritionix.com/" target="_blank" rel="noopener">Nutritionix <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.nutritionvalue.org/" target="_blank" rel="noopener">NutritionValue.org <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+            <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" rel="noopener">WHO healthy diet <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6v6M10 2L3 9"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="assets/js/site.js?v=15"></script>
+  <script src="assets/js/data.js?v=15"></script>
+  <script src="assets/js/render.js?v=15"></script>
+  <script src="assets/js/health.js?v=15"></script>
+  <script src="assets/js/calc.js?v=15"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Group &amp; event orders - Nutri Café</title>
+  <meta name="description" content="Order healthy Nutri Café meal boxes for a group - from 10 boxes delivered home to hundreds for an event. Pick dishes and quantities, choose pickup or Pathao delivery, and see the exact total.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=15">
+</head>
+<body data-page="order">
+  <header id="site-header"></header>
+  <main>
+    <section class="page-hero" style="padding-bottom:40px">
+      <div class="blob" style="width:420px;height:420px;background:#e9d7a8;right:-60px;top:60px"></div>
+      <div class="wrap">
+        <div class="crumbs" data-reveal><a href="index.html">Home</a><span>/</span><span>Group orders</span></div>
+        <h1 data-split>Eating together?<br><em>We'll pack it.</em></h1>
+        <p class="lede" data-reveal style="--d:.3s">From a study group of ten to a seminar of two hundred: healthy, labelled meal boxes for everyone. Choose your dishes, tell us when and where, and see the exact amount before you pay.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px">
+      <form class="wrap order-grid" id="order" novalidate>
+        <div>
+          <!-- 1. food -->
+          <div class="step-card" data-reveal>
+            <header><span class="n">1</span><div><h3>Choose food &amp; quantity</h3><p>Group orders start at <span id="min-n">10</span> boxes in total. Mix any dishes.</p></div></header>
+            <div class="qty-list" id="qty"></div>
+            <div class="field" id="f-items" style="margin-top:6px"><span class="msg">Add at least <span class="min-n2">10</span> boxes in total.</span></div>
+          </div>
+
+          <!-- 2. event -->
+          <div class="step-card" data-reveal>
+            <header><span class="n">2</span><div><h3>Your details &amp; event</h3><p>So we can confirm the order and plan the cooking.</p></div></header>
+            <div class="form-grid">
+              <div class="field" id="f-name"><label for="name">Full name</label><input id="name" autocomplete="name" placeholder="Your name"><span class="msg">Please enter your name.</span></div>
+              <div class="field" id="f-phone"><label for="phone">Mobile number</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"><span class="msg">Enter an 11-digit Bangladeshi mobile number, e.g. 017XXXXXXXX.</span></div>
+              <div class="field" id="f-email"><label for="email">Email <span class="opt">(optional)</span></label><input id="email" type="email" autocomplete="email" placeholder="you@example.com"><span class="msg">That email doesn't look right.</span></div>
+              <div class="field"><label for="org">Club / organisation <span class="opt">(optional)</span></label><input id="org" placeholder="e.g. ULAB Debate Club"></div>
+              <div class="field"><label for="etype">Event type</label><select id="etype"><option>Club meeting</option><option>Workshop / seminar</option><option>Conference</option><option>Celebration / birthday</option><option>Office / team lunch</option><option>Other</option></select></div>
+              <div class="field" id="f-date"><label for="date">Event date</label><input id="date" type="date"><span class="msg">Please pick a date at least 2 days from today.</span></div>
+              <div class="field" id="f-time"><label for="time">Serving time</label><select id="time"><option value="">Choose a time</option><option>8:00 – 9:00 am</option><option>9:00 – 10:00 am</option><option>12:00 – 1:00 pm</option><option>1:00 – 2:00 pm</option><option>2:00 – 3:00 pm</option><option>4:00 – 5:00 pm</option></select><span class="msg">Please choose a serving time.</span></div>
+              <div class="field"><label for="guests">Number of guests <span class="opt">(optional)</span></label><input id="guests" type="number" min="1" placeholder="e.g. 40" class="mono"></div>
+              <div class="field full"><label for="notes">Notes &amp; dietary needs <span class="opt">(optional)</span></label><textarea id="notes" placeholder="Allergies, less spice, separate packing, etc." style="min-height:90px"></textarea></div>
+            </div>
+          </div>
+
+          <!-- 3. delivery -->
+          <div class="step-card" data-reveal>
+            <header><span class="n">3</span><div><h3>Delivery</h3><p>Pick up from our counter, or have Pathao bring it to you.</p></div></header>
+            <div class="choice-grid">
+              <label class="choice"><input type="radio" name="delivery" value="takeaway" checked><span class="box">
+                <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16l-1.5 12h-13z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg></span>
+                <b>Takeaway <span>Free</span></b><small>Collect from the Nutri Café counter at ULAB at your serving time.</small></span></label>
+              <label class="choice"><input type="radio" name="delivery" value="pathao"><span class="box">
+                <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-7h4l2 7M12 10l-2-4H7"/></svg></span>
+                <b>Pathao delivery <span>+৳100</span></b><small>Delivered to your address in Dhaka by Pathao. Flat charge per order.</small></span></label>
+            </div>
+            <div class="reveal-box" id="addr-box"><div>
+              <div class="form-grid">
+                <div class="field full" id="f-addr"><label for="addr">Delivery address</label><textarea id="addr" placeholder="House, road, block, area" style="min-height:80px"></textarea><span class="msg">Please enter the delivery address.</span></div>
+                <div class="field"><label for="area">Area</label><input id="area" placeholder="e.g. Mohammadpur"></div>
+                <div class="field"><label for="landmark">Nearby landmark <span class="opt">(optional)</span></label><input id="landmark" placeholder="e.g. opposite the mosque"></div>
+              </div>
+            </div></div>
+          </div>
+
+          <!-- 4. payment -->
+          <div class="step-card" data-reveal>
+            <header><span class="n">4</span><div><h3>Payment</h3><p>Pay the total shown, then enter your transaction ID so we can match it.</p></div></header>
+            <div class="choice-grid">
+              <label class="choice"><input type="radio" name="pay" value="bkash" checked><span class="box">
+                <span class="bkash-mark">b</span><b>bKash</b><small>Send Money or Payment from the bKash app.</small></span></label>
+              <label class="choice"><input type="radio" name="pay" value="bank"><span class="box">
+                <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-6 9 6M5 10v8M19 10v8M9 10v8M15 10v8M3 20h18"/></svg></span>
+                <b>Bank transfer</b><small>Transfer from any Bangladeshi bank or via NPSB / BEFTN.</small></span></label>
+            </div>
+            <div class="pay-panel" id="pay-bkash">
+              <b>How to pay with bKash</b>
+              <ol>
+                <li>Open the bKash app and choose <b>Send Money</b> (or <b>Payment</b> for a merchant account).</li>
+                <li>Enter our number: <b class="mono">01XXX-XXXXXX</b><span class="tbc">to be added</span></li>
+                <li>Enter the exact amount: <b class="mono" data-total>৳0</b></li>
+                <li>In the reference, write your order name or phone number.</li>
+              </ol>
+              <div class="form-grid">
+                <div class="field" id="f-bnum"><label for="bnum">bKash number you paid from</label><input id="bnum" inputmode="tel" placeholder="01XXXXXXXXX"><span class="msg">Enter the 11-digit number you paid from.</span></div>
+                <div class="field" id="f-trx"><label for="trx">Transaction ID (TrxID)</label><input id="trx" placeholder="e.g. 9JK4XXXXXX" class="mono" style="text-transform:uppercase"><span class="msg">Enter the TrxID from your bKash receipt.</span></div>
+              </div>
+            </div>
+            <div class="pay-panel" id="pay-bank" hidden>
+              <b>Bank transfer details</b>
+              <div class="acct">
+                <span>Account name</span><b>Nutri Café <span class="tbc">to be added</span></b>
+                <span>Bank &amp; branch</span><b>- <span class="tbc">to be added</span></b>
+                <span>Account number</span><b>- <span class="tbc">to be added</span></b>
+                <span>Routing number</span><b>- <span class="tbc">to be added</span></b>
+                <span>Amount</span><b data-total>৳0</b>
+              </div>
+              <div class="form-grid">
+                <div class="field" id="f-bref"><label for="bref">Transfer reference / transaction number</label><input id="bref" placeholder="As shown on your bank receipt" class="mono"><span class="msg">Enter the reference from your bank receipt.</span></div>
+                <div class="field"><label for="bname">Sender bank <span class="opt">(optional)</span></label><input id="bname" placeholder="e.g. BRAC Bank"></div>
+              </div>
+            </div>
+            <p class="note" style="margin-top:14px">Online payment is being set up. For now, we confirm every order by phone after checking the payment.</p>
+          </div>
+        </div>
+
+        <!-- summary -->
+        <aside class="summary" data-reveal="scale">
+          <div class="summary-head"><span class="eyebrow">Order summary</span><h3>Amount to pay</h3></div>
+          <div class="summary-body">
+            <ul class="sum-lines" id="lines"></ul>
+            <div class="sum-row"><span>Subtotal · <span id="boxes">0</span> boxes</span><span id="sub">৳0</span></div>
+            <div class="sum-row"><span>Delivery</span><span id="del">Free</span></div>
+            <div class="sum-total"><span>Total</span><b id="total">৳0</b></div>
+            <div class="per-head" id="per-head"></div>
+            <div class="progress" id="prog"><i></i></div>
+            <p class="min-note" id="min-note"></p>
+            <button class="btn" type="submit" style="width:100%;margin-top:18px">Place order <span class="arrow">→</span></button>
+            <p class="note center" style="margin-top:12px">We'll call to confirm within a few working hours.</p>
+          </div>
+        </aside>
+      </form>
+    </section>
+  </main>
+
+  <div class="modal" id="done" role="dialog" aria-modal="true" aria-labelledby="done-title">
+    <div class="modal-card" data-lenis-prevent>
+      <button class="modal-close" type="button" aria-label="Close">×</button>
+      <svg class="tick" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="34" stroke="#17614a" stroke-width="3"/><path d="M22 37l9 9 19-20" stroke="#17614a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3 id="done-title" style="font-size:32px">Order received</h3>
+      <p class="muted" style="margin:10px 0 18px">Order <span class="order-id" id="done-id"></span> · we'll call <b id="done-phone"></b> to confirm once the payment is checked.</p>
+      <ul class="sum-lines" id="done-lines"></ul>
+      <div class="sum-total"><span>Total</span><b id="done-total"></b></div>
+      <div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap">
+        <button class="btn" type="button" id="done-copy">Copy order details</button>
+        <a class="btn ghost" href="index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+
+  <footer id="site-footer"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="assets/js/site.js?v=15"></script>
+  <script src="assets/js/data.js?v=15"></script>
+  <script src="assets/js/order.js?v=15"></script>
+</body>
+</html>
