@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nutricafe",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["G:/NutriCafe/.claude/devserver.py", "G:/NutriCafe/website", "5174"],
+      "port": 5174
+    }
+  ]
+}
