@@ -43,7 +43,7 @@
   setTimeout(() => { showPlate(idx, true); auto(); }, 250);
 
   /* ---------- healthier swap: same recipe, only the oil changes ---------- */
-  const cr = MENU.find((m) => m.slug === "chicken-rice");
+  const cr = MENU.find((m) => m.slug === "egg-chicken-veggie-rice");
   const heavyRows = cr.ingredients.map((r) => (r.id === "soybean_oil" ? { id: "soybean_oil", amount: 3, unit: "tbsp" } : r));
   const heavy = compute(heavyRows), light = cr.nutrition;
   const sc = $("#swap-card"), sv = (k) => $(`[data-s="${k}"]`, sc);
