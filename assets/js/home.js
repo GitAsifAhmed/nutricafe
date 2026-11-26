@@ -122,15 +122,47 @@
     schedule();
   });
   car.addEventListener("focusout", () => { focused = false; schedule(); });
-  let sx = null, sy = 0;
-  grid.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; clearTimeout(timerId); }, { passive: true });
-  grid.addEventListener("touchend", (e) => {
-    if (sx === null) return;
-    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-    sx = null;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) (dx < 0 ? next : prev)();
-    schedule();
+  /* touch screens: the row follows the finger, then settles on the nearest dish */
+  const view = $(".car-view", car);
+  let drag = null;
+  view.addEventListener("touchstart", (e) => {
+    if (moving || e.touches.length > 1 || !canSlide()) return;
+    drag = { x: e.touches[0].clientX, y: e.touches[0].clientY, dx: 0, axis: null, w: 0 };
+    clearTimeout(timerId);
   }, { passive: true });
+  view.addEventListener("touchmove", (e) => {
+    if (!drag) return;
+    const dx = e.touches[0].clientX - drag.x, dy = e.touches[0].clientY - drag.y;
+    if (!drag.axis) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      drag.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if (drag.axis === "x") { // keep one dish ready on the left so both directions work
+        moving = true;
+        const v = shown();
+        grid.prepend(v[v.length - 1]);
+        drag.w = step();
+      }
+    }
+    if (drag.axis !== "x") return; // vertical gesture: let the page scroll
+    drag.dx = Math.max(-drag.w, Math.min(drag.w, dx));
+    place(-drag.w + drag.dx, false);
+  }, { passive: true });
+  function release(cancelled) {
+    const d = drag;
+    drag = null;
+    if (!d) return;
+    if (d.axis !== "x") { schedule(); return; }
+    const dir = cancelled || Math.abs(d.dx) < 40 ? 0 : d.dx < 0 ? 1 : -1;
+    grid.style.transition = "transform 0.4s cubic-bezier(0.25, 0.6, 0.3, 1)";
+    grid.style.transform = `translate3d(${-d.w * (1 + dir)}px,0,0)`;
+    settle(() => {
+      for (let i = 0; i <= dir; i++) grid.appendChild(shown()[0]); // dir 1 → move two, 0 → one, -1 → none
+      place(0, false); void grid.offsetWidth; grid.style.transition = ""; moving = false;
+      schedule();
+    });
+  }
+  view.addEventListener("touchend", () => release(false), { passive: true });
+  view.addEventListener("touchcancel", () => release(true), { passive: true });
   document.addEventListener("visibilitychange", schedule);
   addEventListener("resize", () => { if (!moving) place(0, false); refresh(); });
   new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; schedule(); }, { threshold: 0.25 }).observe(car);

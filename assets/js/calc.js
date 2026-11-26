@@ -312,5 +312,5 @@
   if (qp && (MENU.some((m) => m.slug === qp) || HOME.some((h) => h.id === qp))) loadPreset(qp);
   // restore the visitor's own draft only if it has ingredients; an empty "Start blank" pot opens on the example instead
   else if (saved && Array.isArray(saved.rows) && saved.rows.length > 0 && saved.rows.every((r) => INGREDIENTS[r.id])) { state = Object.assign(state, saved); syncInputs(); renderRows(); update(); }
-  else loadPreset("chicken-egg-salad");
+  else loadPreset("chicken-salad-rice");
 })();
