@@ -62,22 +62,100 @@
   /* ---------- stats ---------- */
   $$(".count").forEach((el) => el.closest("[data-reveal]").addEventListener("reveal", () => countUp(el, parseFloat(el.dataset.to), { decimals: +el.dataset.dec, duration: 1700 })));
 
-  /* ---------- menu with filter ---------- */
+  /* ---------- menu carousel: one row that slides right to left, one card at a time ---------- */
   const grid = $("#home-menu");
   grid.innerHTML = MENU.map(dishCard).join("");
+  const cards = $$(".dish", grid);
+  // the carousel reveals as a whole; images load up front so a card never slides in blank
+  cards.forEach((el) => { el.removeAttribute("data-reveal"); el.style.removeProperty("--d"); $("img", el).loading = "eager"; });
+
+  const car = $("#dish-carousel");
+  const SLIDE_MS = 700, WAIT_MS = 3500;
+  let moving = false, hovering = false, focused = false, onScreen = false, timerId = 0, current = "all";
+  const shown = () => $$(".dish:not(.hidden)", grid);
+  const step = () => { const v = shown(); return v.length ? v[0].offsetWidth + parseFloat(getComputedStyle(grid).columnGap || 0) : 0; };
+  const canSlide = () => { const v = shown(); return v.length > 1 && v.length * step() > $(".car-view", car).clientWidth; };
+
+  function settle(fn) { // run fn when the slide finishes (with a fallback if the event never fires)
+    let done = false;
+    const end = (e) => { if (done || (e && e.target !== grid)) return; done = true; grid.removeEventListener("transitionend", end); fn(); };
+    grid.addEventListener("transitionend", end);
+    setTimeout(end, SLIDE_MS + 120);
+  }
+  const place = (x, animate) => { grid.style.transition = animate ? "" : "none"; grid.style.transform = x ? `translate3d(${x}px,0,0)` : ""; };
+
+  function next() {
+    if (moving || !canSlide()) return;
+    moving = true;
+    place(-step(), true);
+    settle(() => { grid.appendChild(shown()[0]); place(0, false); void grid.offsetWidth; grid.style.transition = ""; moving = false; });
+  }
+  function prev() {
+    if (moving || !canSlide()) return;
+    moving = true;
+    const v = shown();
+    grid.prepend(v[v.length - 1]);
+    place(-step(), false); void grid.offsetWidth;
+    place(0, true);
+    settle(() => { moving = false; });
+  }
+
+  function schedule() {
+    clearTimeout(timerId);
+    if (hovering || focused || !onScreen || document.hidden || !canSlide()) return;
+    timerId = setTimeout(() => { next(); schedule(); }, WAIT_MS);
+  }
+  function refresh() { car.classList.toggle("static", !canSlide()); schedule(); }
+
+  $(".car-btn.next", car).addEventListener("click", () => { next(); schedule(); });
+  $(".car-btn.prev", car).addEventListener("click", () => { prev(); schedule(); });
+  car.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") { hovering = true; schedule(); } });
+  car.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") { hovering = false; schedule(); } });
+  car.addEventListener("focusin", (e) => {
+    if (!e.target.matches(":focus-visible")) return;
+    focused = true;
+    const card = e.target.closest(".dish");
+    if (card) { // keyboard users: bring the focused card to the front
+      place(0, false);
+      while (shown()[0] !== card) grid.appendChild(shown()[0]);
+    }
+    schedule();
+  });
+  car.addEventListener("focusout", () => { focused = false; schedule(); });
+  let sx = null, sy = 0;
+  grid.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; clearTimeout(timerId); }, { passive: true });
+  grid.addEventListener("touchend", (e) => {
+    if (sx === null) return;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    sx = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) (dx < 0 ? next : prev)();
+    schedule();
+  }, { passive: true });
+  document.addEventListener("visibilitychange", schedule);
+  addEventListener("resize", () => { if (!moving) place(0, false); refresh(); });
+  new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; schedule(); }, { threshold: 0.25 }).observe(car);
+
   const bar = $(".filter-bar"), pill = $(".pill", bar);
   const movePill = (btn) => { pill.style.left = btn.offsetLeft + "px"; pill.style.width = btn.offsetWidth + "px"; };
   function filter(f) {
-    $$(".dish", grid).forEach((d) => {
-      const show = f === "all" || d.dataset.meal === f;
-      if (show) { d.classList.remove("hidden"); requestAnimationFrame(() => requestAnimationFrame(() => d.classList.remove("fading"))); }
-      else { d.classList.add("fading"); setTimeout(() => d.classList.contains("fading") && d.classList.add("hidden"), 420); }
-    });
+    if (f === current) return;
+    current = f;
+    clearTimeout(timerId);
+    car.classList.add("swapping");
+    setTimeout(() => {
+      place(0, false);
+      cards.forEach((el) => { grid.appendChild(el); el.classList.toggle("hidden", !(f === "all" || el.dataset.meal === f)); });
+      moving = false;
+      car.classList.remove("swapping");
+      refresh();
+    }, 300);
   }
   $$("button", bar).forEach((b) => b.addEventListener("click", () => { $$("button", bar).forEach((x) => x.classList.remove("on")); b.classList.add("on"); movePill(b); filter(b.dataset.f); }));
   const syncPill = () => movePill($("button.on", bar));
   requestAnimationFrame(syncPill); addEventListener("load", syncPill); addEventListener("resize", syncPill);
   if (document.fonts) document.fonts.ready.then(syncPill);
+  refresh();
+  addEventListener("load", refresh);
 
   /* ---------- plates ---------- */
   const PLATES = [

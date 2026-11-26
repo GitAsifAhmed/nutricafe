@@ -1447,3 +1447,31 @@ html.lenis, html.lenis body { height: auto; }
 .hc-card li::marker { color: var(--c); }
 .hc-card b { color: var(--ink); font-family: var(--mono); font-weight: 500; }
 @media (max-width: 760px) { .hc-grid { grid-template-columns: 1fr; } .hc-card { padding: 20px 18px; } }
+
+/* ---------- home menu carousel ---------- */
+.carousel { position: relative; }
+/* the padding leaves room for the card lift and shadow without showing the neighbouring cards */
+.car-view { overflow: hidden; overflow: clip; padding: 16px 24px 52px; margin: -16px -24px -36px; }
+.car-track { display: flex; gap: 28px; transition: transform 0.7s cubic-bezier(0.45, 0.05, 0.25, 1), opacity 0.3s var(--ease-hover); touch-action: pan-y; }
+.car-track > .dish { flex: 0 0 calc((100% - 56px) / 3); min-width: 0; }
+.carousel.swapping .car-track { opacity: 0; }
+.carousel.static .car-track { justify-content: center; }
+.car-btn { position: absolute; top: 36%; z-index: 5; width: 56px; height: 56px; margin-top: -28px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--card); color: var(--forest); box-shadow: var(--sh-2); display: grid; place-items: center; cursor: pointer; transition: background-color var(--t-btn) var(--ease-hover), color var(--t-btn) var(--ease-hover), transform var(--t-btn) var(--ease-hover), opacity var(--t-btn); }
+.car-btn.prev { left: -28px; }
+.car-btn.next { right: -28px; }
+.car-btn:hover { background: var(--forest); color: var(--cream-on-dark); transform: scale(1.08); }
+.car-btn:active { transform: scale(0.96); }
+.carousel.static .car-btn { opacity: 0; pointer-events: none; }
+@media (max-width: 1100px) {
+  .car-track > .dish { flex-basis: calc((100% - 28px) / 2); }
+  .car-btn.prev { left: -18px; }
+  .car-btn.next { right: -18px; }
+}
+@media (max-width: 760px) {
+  .car-view { padding: 10px var(--gutter) 40px; margin: -10px calc(-1 * var(--gutter)) -24px; }
+  .car-track { gap: 14px; }
+  .car-track > .dish { flex-basis: 90%; }
+  .car-btn { width: 44px; height: 44px; margin-top: -22px; top: 30%; }
+  .car-btn.prev { left: -10px; }
+  .car-btn.next { right: -10px; }
+}

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=19">
+  <link rel="stylesheet" href="assets/css/style.css?v=20">
 </head>
 <body data-page="home">
   <header id="site-header"></header>
@@ -131,7 +131,11 @@
             <button data-f="Lunch" role="tab">Lunch</button>
           </div>
         </div>
-        <div class="menu-grid swipe" id="home-menu"></div>
+        <div class="carousel" id="dish-carousel" data-reveal role="region" aria-roledescription="carousel" aria-label="Menu dishes">
+          <button class="car-btn prev" type="button" aria-label="Previous dish" aria-controls="home-menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <div class="car-view"><div class="car-track" id="home-menu"></div></div>
+          <button class="car-btn next" type="button" aria-label="Next dish" aria-controls="home-menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
         <div class="center" style="margin-top:56px" data-reveal><a class="btn ghost" href="menu.html">Compare every dish <span class="arrow">→</span></a></div>
       </div>
     </section>
@@ -262,10 +266,10 @@
   <footer id="site-footer"></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="assets/js/site.js?v=19"></script>
-  <script src="assets/js/data.js?v=19"></script>
-  <script src="assets/js/render.js?v=19"></script>
-  <script src="assets/js/posts.js?v=19"></script>
-  <script src="assets/js/home.js?v=19"></script>
+  <script src="assets/js/site.js?v=20"></script>
+  <script src="assets/js/data.js?v=20"></script>
+  <script src="assets/js/render.js?v=20"></script>
+  <script src="assets/js/posts.js?v=20"></script>
+  <script src="assets/js/home.js?v=20"></script>
 </body>
 </html>
