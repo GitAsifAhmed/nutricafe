@@ -23,7 +23,7 @@
   main.innerHTML = `
   <section class="dish-hero">
     <div class="wrap dish-hero-grid">
-      <div class="dish-photo" data-reveal="scale"><img src="${ROOT}assets/img/${m.img}" alt="${m.name}"><span class="placeholder-note">Placeholder photo</span></div>
+      <div class="dish-photo" data-reveal="scale"><img src="${ROOT}assets/img/${m.img}" alt="${m.name}"></div>
       <div class="dish-info">
         <div class="crumbs" data-reveal><a href="${ROOT}index.html">Home</a><span>/</span><a href="${ROOT}menu.html">Menu</a><span>/</span><span>${m.meal}</span></div>
         <div style="display:flex;gap:8px;margin-top:22px" data-reveal><span class="chip ${plateClass(m.plate)}"><span class="dot"></span>${m.plate} plate</span><span class="chip">${m.meal}</span></div>

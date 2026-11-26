@@ -7,17 +7,9 @@
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 
   /* ---------- logo ---------- */
+  // Nutri Café logo: green on light backgrounds, cream on the dark footer and page curtain
   function logoMark(light) {
-    const c = 2 * Math.PI * 19, g = 6;
-    const seg = (frac, start, color) =>
-      `<circle cx="24" cy="24" r="19" stroke="${color}" stroke-width="5" fill="none" stroke-linecap="round"
-        stroke-dasharray="${(frac * c - g).toFixed(2)} ${c}" stroke-dashoffset="${(-start * c).toFixed(2)}"/>`;
-    const leaf = light ? "#f6f1e7" : "#0e4732";
-    const vein = light ? "#0e4732" : "#f6f1e7";
-    return `<svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><g transform="rotate(-90 24 24)">
-      ${seg(0.36, 0, "#1f7a5c")}${seg(0.4, 0.36, "#e2a03a")}${seg(0.24, 0.76, "#d65a3c")}</g>
-      <path d="M24 13.5c-6.2 4.2-8.4 10.4-6.3 16 1.4 3.3 3.9 4.9 6.3 4.9s4.9-1.6 6.3-4.9c2.1-5.6-.1-11.8-6.3-16z" fill="${leaf}"/>
-      <path d="M24 18.5v15.6M24 25l-3-2.6M24 29l3.2-2.6" stroke="${vein}" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg>`;
+    return `<img class="mark" src="${ROOT}assets/img/logo-${light ? "cream" : "green"}.png" alt="" width="44" height="44" decoding="async">`;
   }
   const logo = (light) => `<a class="logo" href="${ROOT}index.html" aria-label="Nutri Café home">${logoMark(light)}<span class="word">Nutri <i>Café</i></span></a>`;
 
