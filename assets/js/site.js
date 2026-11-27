@@ -88,7 +88,8 @@
         <div><h5>Learn</h5><ul>
           <li><a href="${ROOT}calculator.html">Nutrition calculator</a></li>
           <li><a href="${ROOT}journal.html">Journal</a></li>
-          <li><a href="${ROOT}index.html#how">How we label food</a></li></ul></div>
+          <li><a href="${ROOT}index.html#how">How we label food</a></li>
+          <li><a href="${ROOT}game.html">Play Thali Catch: win 10% off</a></li></ul></div>
         <div><h5>Find us</h5><ul>
           <li>Nutri Café outlet<br>University of Liberal Arts Bangladesh (ULAB)</li>
           <li>Mohammadpur, Dhaka</li>

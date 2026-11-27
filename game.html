@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c3f2d">
+  <title>Thali Catch - the Nutri Café game</title>
+  <meta name="description" content="Catch healthy food, dodge the junk and build balanced plates. Play the Nutri Café 7-day challenge and the top three win 10% off for a month.">
+  <link rel="icon" href="assets/img/favicon-64.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/game.css?v=2">
+</head>
+<body>
+  <div class="frame" id="frame">
+    <header class="topbar">
+      <a class="back" href="index.html" aria-label="Back to Nutri Café"><img src="assets/img/logo-cream.png" alt="" width="30" height="30"><span>Nutri <i>Café</i></span></a>
+      <button class="icon-btn" id="btn-board" type="button" aria-label="Leaderboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></button>
+      <button class="icon-btn" id="btn-sound" type="button" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+    </header>
+
+    <!-- game stage -->
+    <div class="stage" id="stage">
+      <canvas id="canvas" aria-label="Thali Catch game area"></canvas>
+      <div class="hud" id="hud" hidden>
+        <div class="hud-score"><small>Score</small><b id="hud-score">0</b></div>
+        <div class="hud-mult" id="hud-mult">x1</div>
+        <div class="hud-hearts" id="hud-hearts" aria-label="Lives"></div>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <button class="pause-btn" id="btn-pause" type="button" aria-label="Pause" hidden><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+    </div>
+
+    <!-- start screen -->
+    <section class="screen" id="screen-start">
+      <div class="sc-card">
+        <div class="title-art" aria-hidden="true"><span>🥚</span><span>🍚</span><span>🥬</span></div>
+        <h1>Thali <em>Catch</em></h1>
+        <p class="lead">Catch healthy food, dodge the junk and build balanced plates.</p>
+
+        <div class="challenge" id="challenge-box"></div>
+
+        <form class="reg" id="reg" novalidate hidden>
+          <label>Your name<input id="reg-name" autocomplete="name" maxlength="40" placeholder="e.g. Nabila Rahman" required></label>
+          <label>Email<input id="reg-email" type="email" autocomplete="email" maxlength="120" placeholder="you@example.com" required></label>
+          <label class="consent"><input type="checkbox" id="reg-consent" required><span>Nutri Café may save my name, email and daily scores for this challenge and email me if I win. My name appears on the leaderboard; my email never does.</span></label>
+          <p class="err" id="reg-err"></p>
+          <button class="btn" type="submit">Save &amp; play</button>
+        </form>
+
+        <div class="who" id="who" hidden>
+          <span>Playing as <b id="who-name"></b></span>
+          <button type="button" class="link" id="btn-change">Not you?</button>
+        </div>
+        <button class="btn big" id="btn-play" type="button" hidden>Play</button>
+
+        <details class="howto">
+          <summary>How to play</summary>
+          <ul>
+            <li><b>Drag</b> anywhere (or use ← → keys) to move your thali.</li>
+            <li><b>Catch healthy food</b> for points. Keep catching to raise your multiplier.</li>
+            <li>Fill your plate with a <b class="g-p">protein</b>, a <b class="g-c">grain</b> and a <b class="g-v">vegetable or fruit</b> for a <b>Balanced plate bonus</b>.</li>
+            <li><b>Junk food</b> costs a heart and resets your multiplier. Lose all 3 and the round ends.</li>
+            <li>💧 <b>Water</b> slows everything down for a few seconds. Every 3rd balanced plate gives back a heart.</li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
+    <!-- game over -->
+    <section class="screen" id="screen-over" hidden>
+      <div class="sc-card">
+        <p class="kicker">Round over</p>
+        <div class="final"><b id="over-score">0</b><span>points</span></div>
+        <div class="over-stats" id="over-stats"></div>
+        <p class="saved" id="over-saved"></p>
+        <div class="week" id="over-week"></div>
+        <div class="fact" id="over-fact"></div>
+        <div class="row">
+          <button class="btn big" id="btn-again" type="button">Play again</button>
+          <button class="btn ghost" id="btn-board2" type="button">Leaderboard</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- leaderboard -->
+    <section class="screen" id="screen-board" hidden>
+      <div class="sc-card">
+        <div class="board-head"><h2>Leaderboard</h2><button class="icon-btn dark" id="btn-close-board" type="button" aria-label="Close">✕</button></div>
+        <p class="muted" id="board-sub"></p>
+        <ol class="board" id="board"></ol>
+        <div class="week" id="board-week"></div>
+        <p class="muted small" id="board-note"></p>
+      </div>
+    </section>
+
+    <!-- pause -->
+    <section class="screen" id="screen-pause" hidden>
+      <div class="sc-card center">
+        <h2>Paused</h2>
+        <button class="btn big" id="btn-resume" type="button">Resume</button>
+        <button class="btn ghost" id="btn-quit" type="button">End round</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="assets/js/game-config.js?v=1"></script>
+  <script src="assets/js/game.js?v=3"></script>
+</body>
+</html>
